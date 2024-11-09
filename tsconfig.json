@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "es2016",                // Compila JavaScript usando le funzionalità di ES2016 come target.
+    "module": "commonjs",               // Usa il sistema di moduli CommonJS, ideale per Node.js.
+    "esModuleInterop": true,            // Abilita l'interoperabilità tra moduli CommonJS e ESModule, utile per importare librerie.
+    "forceConsistentCasingInFileNames": true, // Evita problemi tra sistemi operativi diversi imponendo un uso coerente delle maiuscole nei nomi dei file.
+    "strict": true,                     // Attiva tutte le opzioni di controllo rigoroso per migliorare la sicurezza e la robustezza del codice.
+    "skipLibCheck": true                // Salta il controllo dei tipi per i file delle librerie (aumenta le prestazioni della compilazione).
+  }
+}
