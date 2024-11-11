@@ -12,7 +12,7 @@ This library is available in both TypeScript and JavaScript versions.
    - [TypeScript Example](#typescript-example)
    - [JavaScript Example](#javascript-example)
 4. [API Reference](#api-reference)
-   - [Constructor](#constructor-livetabsoptions-parentdiv-string-maxnumtabs-number)
+   - [Constructor](#constructor)
    - [Methods](#methods)
 5. [Example Use Cases](#example-use-cases)
 6. [Styling](#styling)
@@ -30,9 +30,7 @@ This library is available in both TypeScript and JavaScript versions.
 ---
 
 ## Installation
-
-### Using the TypeScript or JavaScript version
-
+WIP
 
 ## Quick Usage Example
 ### TypeScript Example
@@ -79,10 +77,9 @@ liveTabs.addTab({
 ```
 
 ## API Reference
-Constructor: `LiveTabs(options: { parentDiv: string, maxNumTabs?: number })`
-
+### Constructor: 
+`LiveTabs(options: { parentDiv: string, maxNumTabs?: number })` <br />
 Where:
-
 - **parentDiv (string)**:  
   The ID of the parent container where the tabs will be created (e.g., 'tabs-container').
 
