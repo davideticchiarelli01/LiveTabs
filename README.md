@@ -31,9 +31,18 @@ This library is available in both TypeScript and JavaScript versions.
 
 ---
 ## Installation
-- Download the JavaScript or TypeScript file and include it in your project
-- use the CDN (coming soon) 
-- install via NPM (also coming soon).
+- Download: Download the JavaScript or TypeScript file and include it in your project.
+- CDN: Use the following CDN link to include the library directly in your HTML file <br/>
+   
+   **JavaScript**: 
+   ```html
+   <script src="https://cdn.jsdelivr.net/gh/davideticchiarelli01/LiveTabs@master/LiveTabs.js"></script>
+   ```
+   **TypeScript**:
+   ```html
+   <script src="https://cdn.jsdelivr.net/gh/davideticchiarelli01/LiveTabs@master/LiveTabs.ts"></script>
+   ```
+- NPM: Install LiveTabs via NPM (coming soon).
 
 ## Quick Usage Example
 ### TypeScript Example
@@ -58,9 +67,9 @@ liveTabs.addTab({
 ```
 ### Javascript example
 ```javascript
-<div id="tabs-container"></div>
+<div id="tabs-container"></div> <!-- Target div where the navbar is injected -->
 
-<script src="https://cdn.jsdelivr.net/npm/livetabs@0.1/dist/livetabs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/davideticchiarelli01/LiveTabs@master/LiveTabs.js"></script>
 <script>
     const liveTabs = new LiveTabs({
         parentDiv: 'tabs-container',
