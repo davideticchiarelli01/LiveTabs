@@ -30,7 +30,7 @@ This library is available in both TypeScript and JavaScript versions.
 ---
 
 ## Installation
-WIP
+Download the JavaScript or TypeScript file and include it in your project, or use the CDN (coming soon) or install via NPM (also coming soon).
 
 ## Quick Usage Example
 ### TypeScript Example
