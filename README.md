@@ -18,6 +18,8 @@ This library is available in both TypeScript and JavaScript versions.
 6. [Styling](#styling)
 7. [License](#license)
 
+## Demo
+[Demo](https://codepen.io/Davide-Ticchiarelli-the-sans/pen/abePKpy)
 ## Features
 
 - **Dynamic Tab Creation:** Easily create new tabs with titles and content.
@@ -28,9 +30,10 @@ This library is available in both TypeScript and JavaScript versions.
 - **Simple API:** Methods to switch tabs, remove tabs, and get the active tab.
 
 ---
-
 ## Installation
-Download the JavaScript or TypeScript file and include it in your project, or use the CDN (coming soon) or install via NPM (also coming soon).
+- Download the JavaScript or TypeScript file and include it in your project
+- use the CDN (coming soon) 
+- install via NPM (also coming soon).
 
 ## Quick Usage Example
 ### TypeScript Example
