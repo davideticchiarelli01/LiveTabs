@@ -45,10 +45,15 @@
             border-radius: 8px;
             padding: 10px;
             margin-right: 5px;
+            height: 30px;
             cursor: pointer;
             position: relative;
-            display: inline-block;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
+
 
         .lt-tab.active {
             background-color: #FFC309;
@@ -130,6 +135,11 @@
             justify-content: space-between;
         }
 
+        .nav-buttons #removeAllTabs {
+            background-color: #FF0000;
+            color: white;
+        }
+
         .nav-buttons button {
             padding: 10px;
             background-color: #FFC309;
@@ -156,9 +166,11 @@
     <div id="tabs-container"></div> <!-- Parent div for the tabs -->
     <div class="nav-buttons">
         <button id="prevTab">Previous Tab</button>
+
+        <button id="removeAllTabs" >Remove All Tabs</button>
+
         <button id="nextTab">Next Tab</button>
     </div>
-    <button id="removeAllTabs">Remove All Tabs</button>
 </div>
 
 <script src="../LiveTabs.js"></script>
@@ -177,7 +189,7 @@
                 // Add new tab when a link is clicked
                 tabs.addTab({
                     tabTitle: tabTitle,
-                    callback: (idContentDiv) => {
+                    addContent: (idContentDiv) => {
                         // Create content for the new tab
                         const p = document.createElement("p");
                         p.textContent = `Welcome to the '${tabTitle}' content container`;

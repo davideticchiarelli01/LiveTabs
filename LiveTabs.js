@@ -1,6 +1,6 @@
 "use strict";
 /**
- * LiveTabsTS version 0.1
+ * LiveTabs version 0.1
  *
  * @class LiveTabs
  * @description LiveTabs is a TypeScript library for dynamically managing interactive tabs within a web application.
@@ -15,23 +15,6 @@
  *
  * @param parentDiv (string) - ID of the main container where the tabs will be created.
  * @param maxNumTabs (number, optional) - Maximum number of allowed tabs. Default: no limit.
- *
- * @methods
- * - `addTab`: Adds a new tab with a specified title and content, allowing the addition of a close button and enabling drag-and-drop functionality.
- * - `removeTab`: Removes an existing tab and its associated content, switching to another tab if necessary.
- * - `switchTab`: Switches to a specified tab, updating the displayed content.
- * - `dragAndDropTab`: Enables reordering of tabs through drag-and-drop.
- * - `reorderingMap`: Updates the tab-content association map based on the current tab order.
- * - `createNavbar`: Creates the navbar for the tabs inside the parent container.
- * - `createTab`: Creates and returns a tab button element.
- * - `createTabContent`: Creates a content container for a tab.
- * - `removeAllTabs`: Removes all open tabs and their associated content.
- * - `nextTab`: Switches to the next tab in the list.
- * - `previousTab`: Switches to the previous tab in the list.
- * - `getActiveTab`: Returns the currently active tab element.
- * - `getAllTabs`: Returns an array of all tab IDs.
- * - `getTabCount`: Returns the number of currently opened tabs.
- * - `setMaxTabs`: Sets the maximum number of tabs allowed.
  *
  * @dependencies None.
  * @license Proprietary (©2024 Davide Ticchiarelli)
@@ -64,7 +47,7 @@ class LiveTabs {
     addTab(params) {
         var _a;
         // Destructure parameters to get tabTitle and optional properties
-        const { tabTitle, showCloseButton = true, allowDragAndDrop = true, callback } = params;
+        const { tabTitle, showCloseButton = true, allowDragAndDrop = true, addContent } = params;
         // Check if the maximum number of tabs has been reached
         if (this.maxNumTabs && this.tabContentMap.size >= this.maxNumTabs) {
             // Alert the user if the maximum limit is reached
@@ -88,8 +71,8 @@ class LiveTabs {
         const idContent = `${sanitizedId}-container`; // Generate a unique content div ID for storing content related to this tab
         this.tabContentMap.set(tabId, idContent); // Map the tab ID to its corresponding content div ID
         // If a callback function is provided, execute it to inject content into the new content div
-        if (callback) {
-            callback(idContent); // Pass the content div ID to the callback
+        if (addContent) {
+            addContent(idContent); // Pass the content div ID to the addContent
         }
         // Switch to the newly created tab after it has been added
         this.switchTab(tabId); // Activate the new tab
@@ -103,7 +86,12 @@ class LiveTabs {
         let closeButton = null; // Declare a variable to hold the close button reference
         if (showCloseButton) { // If `showCloseButton` is true, create the close button
             closeButton = document.createElement('button'); // Create the close button element
-            closeButton.textContent = 'x'; // Set the text of the close button to 'x'
+            closeButton.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            `;
             closeButton.classList.add('lt-tab-close-btn'); // Add a class to the close button for styling
             closeButton.onclick = (event) => {
                 event.stopPropagation(); // Prevent triggering tab switch on close
@@ -122,13 +110,22 @@ class LiveTabs {
         };
         return tab; // Return the fully constructed tab element
     }
+    /**
+     * Creates a content area for a new tab.
+     *
+     * This method generates a new `div` element for the content associated with the specified tab ID.
+     * It assigns a unique ID to the content `div`, sets its display style to `block`, and adds a CSS class for styling.
+     * The content `div` is then appended to the parent element.
+     *
+     * @param {string} tabId - The ID of the tab for which the content area is being created.
+     */
     createTabContent(tabId) {
-        const parentElement = document.getElementById(this.parentDiv);
-        const tabContentDiv = document.createElement('div');
+        const parentElement = document.getElementById(this.parentDiv); // Get the parent element by ID
+        const tabContentDiv = document.createElement('div'); // Create a new div for the tab content
         tabContentDiv.id = tabId.replace('lt-tab-', '') + '-container'; // Assign content ID
         tabContentDiv.style.display = 'block'; // Set the style to display block
-        tabContentDiv.classList.add('lt-tab-content');
-        parentElement === null || parentElement === void 0 ? void 0 : parentElement.appendChild(tabContentDiv);
+        tabContentDiv.classList.add('lt-tab-content'); // Add a CSS class for styling
+        parentElement === null || parentElement === void 0 ? void 0 : parentElement.appendChild(tabContentDiv); // Append the content div to the parent element
     }
     // =======================================================
     // Tab Reordering With DragAndDrop
@@ -220,48 +217,67 @@ class LiveTabs {
         if (this.tabContentMap.has(this.openedId)) {
             return; // If so, do nothing
         }
-        if (tabsArray.length < 0) {
+        if (tabsArray.length === 0) {
             this.openedId = ''; // Clear openedId if no tabs are left
             return;
         }
         // Determine the index of the removed tab
         const removedTabIndex = tabsArray.indexOf(idTab); // This will give the index of the removed tab
-        const nextTabIndex = removedTabIndex + 1; // Calculate the next tab index
-        // Switch to the next tab if it exists, otherwise to the previous tab
-        const switchToTabId = nextTabIndex < tabsArray.length ? tabsArray[nextTabIndex] : tabsArray[removedTabIndex - 1];
+        const nextTabIndex = removedTabIndex < tabsArray.length - 1 ? removedTabIndex + 1 : removedTabIndex - 1; // Calculate the next tab index
+        const switchToTabId = tabsArray[nextTabIndex]; // Switch to the determined tab
         if (switchToTabId) {
             this.switchTab(switchToTabId); // Switch to the determined tab
         }
     }
+    /**
+     * Removes all tabs from the tabContentMap and the DOM.
+     *
+     * This method iterates over each entry in the tabContentMap and calls the removeTab method
+     * to remove each tab and its associated content from the DOM.
+     */
     removeAllTabs() {
         this.tabContentMap.forEach((contentId, tabId) => {
-            this.removeTab(tabId);
+            this.removeTab(tabId); // Remove each tab and its associated content
         });
     }
     // =======================================================
     // Tab Switching
     // =======================================================
-    // Method to switch to a specific tab
+    /**
+     * Switches to the specified tab by its ID.
+     *
+     * This method hides the currently active tab and its content, and then displays the new tab and its content.
+     * It also updates the `openedId` to the new tab's ID.
+     *
+     * @param {string} id - The ID of the tab to switch to.
+     */
     switchTab(id) {
-        if (this.openedId === id)
+        if (this.openedId === id) {
             return;
-        if (this.openedId) {
-            const previousContentId = this.tabContentMap.get(this.openedId);
-            const previousContent = document.getElementById(previousContentId);
+        } // If the tab is already open, do nothing
+        if (this.openedId) { // Check if there is a currently opened tab
+            const previousContentId = this.tabContentMap.get(this.openedId); // Get the content ID of the previously opened tab
+            const previousContent = document.getElementById(previousContentId); // Get the content element by ID
             if (previousContent)
-                previousContent.style.display = 'none';
-            const previousTab = document.getElementById(this.openedId);
-            previousTab === null || previousTab === void 0 ? void 0 : previousTab.classList.remove('active');
+                previousContent.style.display = 'none'; // Hide the previously opened content
+            const previousTab = document.getElementById(this.openedId); // Get the tab element by ID
+            previousTab === null || previousTab === void 0 ? void 0 : previousTab.classList.remove('active'); // Remove the 'active' class from the previously opened tab
         }
-        const activeContentId = this.tabContentMap.get(id);
-        const activeContent = document.getElementById(activeContentId);
+        const activeContentId = this.tabContentMap.get(id); // Get the content ID of the newly opened tab
+        const activeContent = document.getElementById(activeContentId); // Get the content element by ID
         if (activeContent)
-            activeContent.style.display = 'block';
-        const activeTab = document.getElementById(id);
-        activeTab === null || activeTab === void 0 ? void 0 : activeTab.classList.add('active');
-        this.openedId = id;
+            activeContent.style.display = 'block'; // Display the newly opened content
+        const activeTab = document.getElementById(id); // Get the tab element by ID
+        activeTab === null || activeTab === void 0 ? void 0 : activeTab.classList.add('active'); // Add the 'active' class to the newly opened tab
+        this.openedId = id; // Update the currently opened tab ID
     }
-    // Method to switch to the next tab, if you're not on the last tab
+    /**
+     * Switches to the next tab if it exists.
+     *
+     * This method retrieves an array of all tab IDs and finds the index of the currently opened tab.
+     * If the current tab is not the last one, it switches to the next tab.
+     * If the current tab is the last one, it logs a warning.
+     */
     nextTab() {
         const tabsArray = this.getAllTabs(); // Retrieve an array of all tab IDs
         const currentIndex = tabsArray.indexOf(this.openedId); // Find the index of the currently opened tab
@@ -274,7 +290,13 @@ class LiveTabs {
             console.warn('Currently on the last tab. No next tab available.'); // Log a warning if already on the last tab
         }
     }
-    // Method to switch to the previous tab, if you're not on the first tab
+    /**
+     * Switches to the previous tab if it exists.
+     *
+     * This method retrieves an array of all tab IDs and finds the index of the currently opened tab.
+     * If the current tab is not the first one, it switches to the previous tab.
+     * If the current tab is the first one, it logs a warning.
+     */
     previousTab() {
         const tabsArray = this.getAllTabs(); // Retrieve an array of all tab IDs
         const currentIndex = tabsArray.indexOf(this.openedId); // Find the index of the currently opened tab
@@ -290,18 +312,38 @@ class LiveTabs {
     // =======================================================
     // Getter
     // =======================================================
+    /**
+     * Gets the ID of the currently active tab.
+     *
+     * @returns {string} The ID of the currently active tab.
+     */
     getActiveTab() {
         return this.openedId;
     }
+    /**
+     * Retrieves an array of all tab IDs.
+     *
+     * @returns {string[]} An array of all tab IDs.
+     */
     getAllTabs() {
         return Array.from(this.tabContentMap.keys());
     }
+    /**
+     * Gets the total number of tabs.
+     *
+     * @returns {number} The total number of tabs.
+     */
     getTabCount() {
         return this.tabContentMap.size;
     }
     // =======================================================
     // Setter
     // =======================================================
+    /**
+     * Sets the maximum number of tabs allowed.
+     *
+     * @param {number} newMax - The new maximum number of tabs.
+     */
     setMaxTabs(newMax) {
         this.maxNumTabs = newMax;
     }
