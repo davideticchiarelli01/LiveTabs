@@ -64,7 +64,6 @@ class LiveTabs {
             this.switchTab(tabId);
             return; // Exit as no new tab needs to be created
         }
-
         // Create a new tab element and append it to the navigation bar
         const tab = this.createTab(tabTitle, tabId, showCloseButton, allowDragAndDrop);
         (_a = this.navbarDiv) === null || _a === void 0 ? void 0 : _a.appendChild(tab);
