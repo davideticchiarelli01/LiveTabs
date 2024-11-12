@@ -177,6 +177,7 @@ The tabs and their contents are styled using CSS classes. You can customize the 
 - `.lt-container`: The container for the tabs.
 - `.lt-tab`: A tab button element.
 - `.lt-tab.active`: The currently active tab.
+- `.lt-tab.over`: The tab hovered by another during drag-and-drop.
 - `.lt-tab-close-btn`: The close button inside each tab.
 - `.lt-tab-content`: The content area for each tab.
 You can also add your custom CSS rules to further tailor the design to fit your application.
