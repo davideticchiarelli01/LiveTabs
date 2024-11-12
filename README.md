@@ -103,7 +103,7 @@ Where:
 ### Methods
 
 - `addTab(params: { tabTitle: string, showCloseButton?: boolean, allowDragAndDrop?: boolean, addContent?: (idContent: string) => void })`  
-  Adds a new tab with the given title, and optionally enables a close button and drag-and-drop functionality.  
+  Adds a new tab with the specified title. Optionally, enables a close button and drag-and-drop functionality, both of which are enabled by default.  
   You can also provide an addContent callback to populate the content of the tab.
 
 - `removeTab(idTab: string)`  
@@ -161,7 +161,7 @@ Where:
     ```typescript
     liveTabs.addTab({
         tabTitle: 'Drag Me',
-        allowDragAndDrop: true
+        allowDragAndDrop: true (optional because it is true by default)
     });
     ```
 5. **Switch to Next/Previous Tab** <br/>
