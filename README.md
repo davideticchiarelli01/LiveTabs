@@ -103,7 +103,7 @@ Where:
 ### Methods
 
 - `addTab(params: { tabTitle: string, showCloseButton?: boolean, allowDragAndDrop?: boolean, addContent?: (idContent: string) => void })`  
-  Adds a new tab with the given title, and optionally enables a close button and drag-and-drop functionality.  
+  Adds a new tab with the specified title. Optionally, enables a close button and drag-and-drop functionality, both of which are enabled by default.  
   You can also provide an addContent callback to populate the content of the tab.
 
 - `removeTab(idTab: string)`  
@@ -134,7 +134,7 @@ Where:
   Sets a new maximum number of open tabs.
   
 ## Example Use Cases
-1. Dynamically Create Tabs with Content
+1. **Dynamically Create Tabs with Content** <br/>
      You can dynamically create tabs and inject custom content into each one.
       
      ```typescript
@@ -146,7 +146,7 @@ Where:
           }
       });
      ```
-2. Limiting the Number of Tabs
+2. **Limiting the Number of Tabs** <br/>
     You can limit the number of tabs open at any time.
     
     ```typescript
@@ -155,16 +155,16 @@ Where:
         maxNumTabs: 3 // set the maximum number of tab allowed (optional)
     });
     ```
-3. Reorder Tabs via Drag and Drop
+3. **Reorder Tabs via Drag and Drop** <br/>
     Enable the drag-and-drop feature to reorder tabs.
     
     ```typescript
     liveTabs.addTab({
         tabTitle: 'Drag Me',
-        allowDragAndDrop: true
+        allowDragAndDrop: true (optional because it is true by default)
     });
     ```
-4. Switch to Next/Previous Tab
+5. **Switch to Next/Previous Tab** <br/>
     Switch between tabs programmatically.
   
     ```typescript
