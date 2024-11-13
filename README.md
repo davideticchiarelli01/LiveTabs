@@ -161,7 +161,7 @@ Where:
     ```typescript
     const liveTabs = new LiveTabs({
         parentDiv: 'tabs-container',
-        maxNumTabs: 3 // set the maximum number of tab allowed (optional)
+        maxNumTabs: 3, // set the maximum number of tab allowed (optional)
         allowDragAndDrop: true // default: false
     });
     ```
