@@ -150,29 +150,32 @@ class LiveTabs {
         };
         tab.ondragenter = (e) => {
             e.preventDefault();
-            e.target.classList.add('over');
+            let dropTarget = e.target.closest('.lt-tab');
+            console.log(dropTarget);
+            dropTarget.classList.add('over');
         };
         tab.ondragleave = (e) => {
-            e.target.classList.remove('over');
+            let dropTarget = e.target.closest('.lt-tab');
+            if (dropTarget !== e.target)
+                return;
+            dropTarget.classList.remove('over');
         };
         tab.ondrop = (e) => {
-            var _a, _b;
+            var _a, _b, _c;
             e.preventDefault();
-            let dropTarget = e.target;
-            // If dropTarget is a button inside the tab, find the parent tab
-            if (dropTarget.tagName === 'BUTTON' && dropTarget.parentElement === tab) {
-                dropTarget = tab; // Set the parent tab as the drop target
+            let dropTarget = e.target.closest('.lt-tab');
+            if (!dropTarget) {
+                dropTarget = tab;
             }
-            const draggedId = (_a = e.dataTransfer) === null || _a === void 0 ? void 0 : _a.getData("text/plain");
-            const draggedElement = document.getElementById(draggedId || '');
+            const draggedId = (_b = (_a = e.dataTransfer) === null || _a === void 0 ? void 0 : _a.getData("text/plain")) !== null && _b !== void 0 ? _b : '';
+            const draggedElement = document.getElementById(draggedId);
             // Check to exclude the specific button from being the drop target
-            if (draggedElement && dropTarget && draggedElement !== dropTarget) {
-                const dropTargetRect = dropTarget.getBoundingClientRect();
-                const center = (dropTargetRect.left + dropTargetRect.right) / 2;
-                // Check if the cursor is left or right of the center
-                const insertBefore = e.clientX < center;
+            if (draggedElement && dropTarget) {
+                const dropTargetRect = dropTarget.getBoundingClientRect(); // Get the bounding rectangle of the drop target
+                const center = (dropTargetRect.left + dropTargetRect.right) / 2; // Get the center of the drop target
+                const insertBefore = e.clientX <= center; // Check if the cursor is left or right of the center
                 // Insert the dragged element before or after the drop target
-                (_b = dropTarget.parentNode) === null || _b === void 0 ? void 0 : _b.insertBefore(draggedElement, insertBefore ? dropTarget : dropTarget.nextSibling);
+                (_c = dropTarget.parentNode) === null || _c === void 0 ? void 0 : _c.insertBefore(draggedElement, insertBefore ? dropTarget : dropTarget.nextSibling);
                 this.reorderingMap(); // reorder map with new position;
             }
             else {

@@ -192,32 +192,35 @@ class LiveTabs {
 
         tab.ondragenter = (e: DragEvent) => {
             e.preventDefault();
-            (e.target as HTMLElement).classList.add('over');
+            let dropTarget = (e.target as HTMLElement).closest('.lt-tab') as HTMLElement;
+            console.log(dropTarget);
+            dropTarget.classList.add('over');
         };
 
         tab.ondragleave = (e: DragEvent) => {
-            (e.target as HTMLElement).classList.remove('over');
+            let dropTarget = (e.target as HTMLElement).closest('.lt-tab') as HTMLElement;
+
+            if(dropTarget !== e.target) return;
+            dropTarget.classList.remove('over');
         };
 
         tab.ondrop = (e: DragEvent) => {
             e.preventDefault();
 
-            let dropTarget = e.target as HTMLElement;
+            let dropTarget = (e.target as HTMLElement).closest('.lt-tab') as HTMLElement;
 
-            // If dropTarget is a button inside the tab, find the parent tab
-            if (dropTarget.tagName === 'BUTTON' && dropTarget.parentElement === tab) {
-                dropTarget = tab; // Set the parent tab as the drop target
+            if (!dropTarget) {
+                dropTarget = tab;
             }
 
-            const draggedId = e.dataTransfer?.getData("text/plain");
-            const draggedElement = document.getElementById(draggedId || '');
+            const draggedId = e.dataTransfer?.getData("text/plain") ?? '';
+            const draggedElement = document.getElementById(draggedId);
 
             // Check to exclude the specific button from being the drop target
-            if (draggedElement && dropTarget && draggedElement !== dropTarget) {
-                const dropTargetRect = dropTarget.getBoundingClientRect();
-                const center = (dropTargetRect.left + dropTargetRect.right) / 2;
-                // Check if the cursor is left or right of the center
-                const insertBefore = e.clientX < center;
+            if (draggedElement && dropTarget) {
+                const dropTargetRect = dropTarget.getBoundingClientRect(); // Get the bounding rectangle of the drop target
+                const center = (dropTargetRect.left + dropTargetRect.right) / 2; // Get the center of the drop target
+                const insertBefore = e.clientX <= center; // Check if the cursor is left or right of the center
 
                 // Insert the dragged element before or after the drop target
                 dropTarget.parentNode?.insertBefore(
