@@ -25,12 +25,14 @@ class LiveTabs {
     navbarDiv: HTMLElement | undefined; // The div element that contains the tabs
     maxNumTabs?: number; // Maximum number of tabs allowed to open
     openedId: string; // ID of the currently opened tab
+    allowDragAndDrop: boolean; // Flag to enable/disable drag-and-drop functionality
     tabContentMap: Map<string, string>; // Map to hold tab IDs and their associated content IDs
 
     // Constructor to initialize the LiveTabsTS class
-    constructor(options: { parentDiv: string; maxNumTabs?: number }) {
+    constructor(options: { parentDiv: string; maxNumTabs?: number; allowDragAndDrop?: boolean }) {
         this.parentDiv = options.parentDiv;      // Set the parentDiv from the options
         this.openedId = '';                       // Initialize openedId as an empty string
+        this.allowDragAndDrop = options.allowDragAndDrop ?? false; // Default to false if not provided
         this.maxNumTabs = options.maxNumTabs;    // Set the maximum number of tabs from the options
         this.tabContentMap = new Map();          // Initialize the map for tab-content relationship
 
@@ -61,11 +63,10 @@ class LiveTabs {
     public addTab(params: {
         tabTitle: string;
         showCloseButton?: boolean;
-        allowDragAndDrop?: boolean;
         addContent?: (idContent: string) => void
     }): void {
         // Destructure parameters to get tabTitle and optional properties
-        const {tabTitle, showCloseButton = true, allowDragAndDrop = true, addContent} = params;
+        const {tabTitle, showCloseButton = true, addContent} = params;
 
         // Check if the maximum number of tabs has been reached
         if (this.maxNumTabs && this.tabContentMap.size >= this.maxNumTabs) {
@@ -87,7 +88,7 @@ class LiveTabs {
         }
 
         // Create a new tab element and append it to the navigation bar
-        const tab = this.createTab(tabTitle, tabId, showCloseButton, allowDragAndDrop);
+        const tab = this.createTab(tabTitle, tabId, showCloseButton);
         this.navbarDiv?.appendChild(tab);
 
         this.createTabContent(tabId); // Create a corresponding content area for the new tab
@@ -105,7 +106,7 @@ class LiveTabs {
         this.switchTab(tabId); // Activate the new tab
     }
 
-    private createTab(tabTitle: string, tabId: string, showCloseButton: boolean, allowDragAndDrop: boolean): HTMLElement {
+    private createTab(tabTitle: string, tabId: string, showCloseButton: boolean): HTMLElement {
         const tab = document.createElement("button"); // Create a new button element to represent the tab
         tab.textContent = tabTitle; // Set the text of the tab to the provided title
         tab.id = tabId; // Set the unique ID of the tab to the provided ID
@@ -130,7 +131,7 @@ class LiveTabs {
             tab.appendChild(closeButton); // Append the close button to the tab element
         }
 
-        if (allowDragAndDrop) {
+        if (this.allowDragAndDrop) { // Check if drag-and-drop functionality is enabled
             this.dragAndDropTab(tab);
         }
 
