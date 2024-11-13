@@ -104,8 +104,7 @@ Where:
 ### Methods
 
 - `addTab(params: { tabTitle: string, showCloseButton?: boolean, allowDragAndDrop?: boolean, addContent?: (idContent: string) => void })`  
-  Adds a new tab with the specified title. Optionally, enables a close button and drag-and-drop functionality, both of which are enabled by default.  
-  You can also provide an addContent callback to populate the content of the tab.
+  Adds a new tab with the specified title. Optionally, enables a close button and drag-and-drop functionality, both of which are enabled by default. You can also provide an addContent callback to populate the content of the tab.
 
 - `removeTab(idTab: string)`  
   Removes the tab with the specified ID and its associated content.
