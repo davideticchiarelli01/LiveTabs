@@ -53,12 +53,12 @@ import { LiveTabs } from 'livetabs';
 const liveTabs = new LiveTabs({
     parentDiv: 'tabs-container',
     maxNumTabs: 5 // Optional: Maximum number of open tabs
+    allowDragAndDrop: true, // Optional: it is set to false by default
 });
 
 liveTabs.addTab({
     tabTitle: 'Tab 1',
     showCloseButton: true,
-    allowDragAndDrop: true,
     addContent: (contentId: string) => {
         const contentElement = document.getElementById(contentId);
         contentElement.innerHTML = 'Content for Tab 1';
@@ -74,12 +74,12 @@ liveTabs.addTab({
     const liveTabs = new LiveTabs({
         parentDiv: 'tabs-container',
         maxNumTabs: 5 // Optional: Maximum number of open tabs
+        allowDragAndDrop: true, // Optional: it is set to false by default
     });
 
     liveTabs.addTab({
         tabTitle: 'Tab 1',
         showCloseButton: true,
-        allowDragAndDrop: true,
         addContent: (contentId) => {
             const contentElement = document.getElementById(contentId);
             contentElement.innerHTML = 'Content for Tab 1';
@@ -90,15 +90,16 @@ liveTabs.addTab({
 
 ## API Reference
 ### Constructor: 
-`LiveTabs(options: { parentDiv: string, maxNumTabs?: number })` <br />
+`LiveTabs(options: { parentDiv: string, maxNumTabs?: number, allowDragAndDrop?: boolean})` <br />
 Where:
-- **parentDiv (string)**:  
-  The ID of the parent container where the tabs will be created (e.g., 'tabs-container').
+- **parentDiv** (string):  
+  The ID of the parent container where the tabs will be created (e.g., `'tabs-container'`).
 
-- **maxNumTabs (number, optional)**:  
-  The maximum number of tabs that can be opened at once. Default: No limit.
+- **maxNumTabs** (number, optional):  
+  The maximum number of tabs that can be opened at once. If not specified, there is no limit.
 
----
+- **allowDragAndDrop** (boolean, optional, default = `true`):  
+  If `true`, enables the drag-and-drop functionality for tabs. The default value is `true`.
 
 ### Methods
 
@@ -155,13 +156,14 @@ Where:
         maxNumTabs: 3 // set the maximum number of tab allowed (optional)
     });
     ```
-3. **Reorder Tabs via Drag and Drop** <br/>
+3. **Allow Drag and Drop** <br/>
     Enable the drag-and-drop feature to reorder tabs.
     
     ```typescript
-    liveTabs.addTab({
-        tabTitle: 'Drag Me',
-        allowDragAndDrop: true (optional because it is true by default)
+    const liveTabs = new LiveTabs({
+        parentDiv: 'tabs-container',
+        maxNumTabs: 3 // set the maximum number of tab allowed (optional)
+        allowDragAndDrop: true // default: false
     });
     ```
 5. **Switch to Next/Previous Tab** <br/>
