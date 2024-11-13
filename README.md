@@ -29,7 +29,6 @@ This library is available in both TypeScript and JavaScript versions.
 - **Customizable Tab Appearance:** Optionally show close buttons, and enable or disable drag-and-drop.
 - **Simple API:** Methods to switch tabs, remove tabs, and get the active tab.
 
----
 ## Installation
 - Download: Download the JavaScript or TypeScript file and include it in your project.
 - CDN: Use the following CDN link to include the library directly in your HTML file <br/>
