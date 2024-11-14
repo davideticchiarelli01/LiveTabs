@@ -98,7 +98,7 @@ Where:
   The maximum number of tabs that can be opened at once. If not specified, there is no limit.
 
 - **allowDragAndDrop** (boolean, optional, default = `true`):  
-  If `true`, enables the drag-and-drop functionality for tabs. The default value is `true`.
+  If `true`, enables the drag-and-drop functionality for tabs. The default value is `false`.
 
 ### Methods
 
