@@ -11,10 +11,11 @@
  * @date Created: 02 Nov 2024
  * @author Davide Ticchiarelli
  * @contact davideticchiarelli01@gmail.com
- * @repository TBD
+ * @repository https://github.com/davideticchiarelli01/LiveTabs
  *
  * @param parentDiv (string) - ID of the main container where the tabs will be created.
  * @param maxNumTabs (number, optional) - Maximum number of allowed tabs. Default: no limit.
+ * @param allowDragAndDrop (boolean, optional) - Flag to enable drag-and-drop functionality. Default: false.
  *
  * @dependencies None.
  * @license Proprietary (©2024 Davide Ticchiarelli)
@@ -33,7 +34,13 @@ class LiveTabs {
     // =======================================================
     // NavBar, tab and content creation
     // =======================================================
-    // Method to create the navbar where tabs will be displayed
+    /**
+     * Creates the navbar where tabs will be displayed.
+     *
+     * This method retrieves the parent element by its ID and creates a new `div` element for the navbar.
+     * If the parent element does not exist, it logs an error and exits the method.
+     * The new `div` element is assigned an ID and a CSS class, and is prepended to the parent element.
+     */
     createNavbar() {
         const parentElement = document.getElementById(this.parentDiv); // Get the parent element by ID
         if (!parentElement) { // Check if the parent element exists
@@ -45,7 +52,14 @@ class LiveTabs {
         this.navbarDiv.classList.add('lt-container'); // Set the class of the navbar div
         parentElement.prepend(this.navbarDiv); // Prepend the navbar div to the parent element
     }
-    // Method to add a new tab
+    /**
+     * Adds a new tab to the LiveTabs instance.
+     *
+     * @param {Object} params - The parameters for the new tab.
+     * @param {string} params.tabTitle - The title of the new tab.
+     * @param {boolean} [params.showCloseButton=true] - Whether to show a close button on the tab.
+     * @param {Function} [params.addContent] - A callback function to add content to the tab.
+     */
     addTab(params) {
         var _a;
         // Destructure parameters to get tabTitle and optional properties
@@ -79,6 +93,14 @@ class LiveTabs {
         // Switch to the newly created tab after it has been added
         this.switchTab(tabId); // Activate the new tab
     }
+    /**
+     * Creates a new tab element.
+     *
+     * @param {string} tabTitle - The title of the tab.
+     * @param {string} tabId - The unique ID of the tab.
+     * @param {boolean} showCloseButton - Whether to show a close button on the tab.
+     * @returns {HTMLElement} The created tab element.
+     */
     createTab(tabTitle, tabId, showCloseButton) {
         const tab = document.createElement("button"); // Create a new button element to represent the tab
         tab.textContent = tabTitle; // Set the text of the tab to the provided title
@@ -132,6 +154,14 @@ class LiveTabs {
     // =======================================================
     // Tab Reordering With DragAndDrop
     // =======================================================
+    /**
+     * Enables drag-and-drop functionality for a tab element.
+     *
+     * This method makes the tab element draggable and sets up event handlers for drag-and-drop operations.
+     * It handles the drag start, drag end, drag over, drag enter, drag leave, and drop events.
+     *
+     * @param {HTMLElement} tab - The tab element to enable drag-and-drop functionality for.
+     */
     dragAndDropTab(tab) {
         tab.draggable = true; // Make the tab draggable
         let dragSrcEl = null;
@@ -186,6 +216,9 @@ class LiveTabs {
             dropTarget.classList.remove('over');
         };
     }
+    /**
+     * Reorders the tabContentMap to reflect the new order of tabs in the DOM.
+     */
     reorderingMap() {
         var _a;
         const newOrder = new Map();
@@ -203,7 +236,14 @@ class LiveTabs {
     // =======================================================
     // Tab Removal
     // =======================================================
-    // Method to remove a tab
+    /**
+     * Removes a tab by its ID.
+     *
+     * This method removes the tab element and its associated content from the DOM.
+     * It also updates the internal tabContentMap and switches to another tab if necessary.
+     *
+     * @param {string} idTab - The ID of the tab to be removed.
+     */
     removeTab(idTab) {
         if (!this.tabContentMap.has(idTab)) { // If the tab is not found
             console.warn("Tab not found in the tab-content map for ID:", idTab); // Log a warning
