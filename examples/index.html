@@ -34,13 +34,22 @@
 <script>
     // Initialize the LiveTabsTS class
     const tabs = new LiveTabs({
-        parentDiv: 'tabs-container',
-        allowDragAndDrop: true,
+        parentDiv: "tabs-container",
+        allowDragAndDrop: false
     });
 
-    const menuLinks = document.querySelectorAll('.sidebar a');
+    tabs.addTab({
+        tabTitle: "Dashboard",
+        showCloseButton: true,
+        addContent: (contentId) => {
+            const contentElement = document.getElementById(contentId);
+            contentElement.innerHTML = "Content for Dashboard";
+        }
+    });
+
+    const menuLinks = document.querySelectorAll(".sidebar a");
     // Loop through each link and add event listeners
-    menuLinks.forEach(link => {
+    menuLinks.forEach((link) => {
         link.onclick = () => {
             const tabTitle = link.textContent;
             if (tabTitle) {
@@ -68,19 +77,21 @@
     }
 
     // Add event listener for the "Next Tab" button
-    document.getElementById('nextTab')?.addEventListener('click', () => {
+    document.getElementById("nextTab")?.addEventListener("click", () => {
         tabs.nextTab(); // Switch to the next tab
         getInfo();
     });
 
     // Add event listener for the "Previous Tab" button
-    document.getElementById('prevTab')?.addEventListener('click', () => {
+    document.getElementById("prevTab")?.addEventListener("click", () => {
         tabs.previousTab(); // Switch to the previous tab
         getInfo();
     });
 
-    document.getElementById("removeAllTabs").addEventListener("click", (e) =>
-        tabs.removeAllTabs());
+    document
+        .getElementById("removeAllTabs")
+        .addEventListener("click", (e) => tabs.removeAllTabs());
+
 </script>
 </body>
 </html>
