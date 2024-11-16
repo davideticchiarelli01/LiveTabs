@@ -22,12 +22,12 @@ This library is available in both TypeScript and JavaScript versions.
 [Demo](https://codepen.io/Davide-Ticchiarelli-the-sans/pen/abePKpy)
 ## Features
 
-- **Dynamic Tab Creation:** Easily create new tabs with titles and content.
+- **Dynamic Tab Creation:** Create new tabs effortlessly, each with customizable titles and content.
 - **Tab Management:** Switch between tabs, reorder them, and close them.
 - **Tab Limiting:** Set a maximum number of allowed open tabs.
-- **Drag and Drop Support:** Reorder tabs by dragging and dropping.
-- **Customizable Tab Appearance:** Optionally show close buttons, and enable or disable drag-and-drop.
-- **Simple API:** Methods to switch tabs, remove tabs, and get the active tab.
+- **Drag and Drop Support:** Reorder tabs easily by dragging and dropping (if enabled).
+- **Customizable Tab Appearance:** Optionally display close buttons on tabs.
+- **Simple API:** Includes methods to switch, remove, and get the active tab.
 
 ## Installation
 - Download: Download the JavaScript or TypeScript file and include it in your project.
@@ -92,18 +92,18 @@ liveTabs.addTab({
 `LiveTabs(options: { parentDiv: string, maxNumTabs?: number, allowDragAndDrop?: boolean})` <br />
 Where:
 - **parentDiv** (string):  
-  The ID of the parent container where the tabs will be created (e.g., `'tabs-container'`).
+  The ID of the div where you want to create the tab container (e.g., `tabs-container`).
 
 - **maxNumTabs** (number, optional):  
   The maximum number of tabs that can be opened at once. If not specified, there is no limit.
 
-- **allowDragAndDrop** (boolean, optional, default = `true`):  
-  If `true`, enables the drag-and-drop functionality for tabs. The default value is `false`.
+- **allowDragAndDrop** (boolean, optional, default = `false`):  
+  Enables drag-and-drop functionality for reordering tabs when set to true. Defaults to false.
 
 ### Methods
 
 - `addTab(params: { tabTitle: string, showCloseButton?: boolean, addContent?: (idContent: string) => void })`  
-  Adds a new tab with the specified title. Optionally, enables a close button, both of which are enabled by default. You can also provide an addContent callback to populate the content of the tab.
+  Adds a new tab with the specified title. Optionally, enables a close button who is enabled by default. You can also provide an addContent callback to populate the content of the tab.
 
 - `removeTab(idTab: string)`  
   Removes the tab with the specified ID and its associated content.
