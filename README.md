@@ -22,14 +22,13 @@ This library is available in both TypeScript and JavaScript versions.
 [Demo](https://codepen.io/Davide-Ticchiarelli-the-sans/pen/abePKpy)
 ## Features
 
-- **Dynamic Tab Creation:** Easily create new tabs with titles and content.
+- **Dynamic Tab Creation:** Create new tabs effortlessly, each with customizable titles and content.
 - **Tab Management:** Switch between tabs, reorder them, and close them.
 - **Tab Limiting:** Set a maximum number of allowed open tabs.
-- **Drag and Drop Support:** Reorder tabs by dragging and dropping.
-- **Customizable Tab Appearance:** Optionally show close buttons, and enable or disable drag-and-drop.
-- **Simple API:** Methods to switch tabs, remove tabs, and get the active tab.
+- **Drag and Drop Support:** Reorder tabs easily by dragging and dropping (if enabled).
+- **Customizable Tab Appearance:** Optionally display close buttons on tabs.
+- **Simple API:** Includes methods to switch, remove, and get the active tab.
 
----
 ## Installation
 - Download: Download the JavaScript or TypeScript file and include it in your project.
 - CDN: Use the following CDN link to include the library directly in your HTML file <br/>
@@ -53,12 +52,12 @@ import { LiveTabs } from 'livetabs';
 const liveTabs = new LiveTabs({
     parentDiv: 'tabs-container',
     maxNumTabs: 5 // Optional: Maximum number of open tabs
+    allowDragAndDrop: true, // Optional: it is set to false by default
 });
 
 liveTabs.addTab({
     tabTitle: 'Tab 1',
     showCloseButton: true,
-    allowDragAndDrop: true,
     addContent: (contentId: string) => {
         const contentElement = document.getElementById(contentId);
         contentElement.innerHTML = 'Content for Tab 1';
@@ -74,12 +73,12 @@ liveTabs.addTab({
     const liveTabs = new LiveTabs({
         parentDiv: 'tabs-container',
         maxNumTabs: 5 // Optional: Maximum number of open tabs
+        allowDragAndDrop: true, // Optional: it is set to false by default
     });
 
     liveTabs.addTab({
         tabTitle: 'Tab 1',
         showCloseButton: true,
-        allowDragAndDrop: true,
         addContent: (contentId) => {
             const contentElement = document.getElementById(contentId);
             contentElement.innerHTML = 'Content for Tab 1';
@@ -90,21 +89,21 @@ liveTabs.addTab({
 
 ## API Reference
 ### Constructor: 
-`LiveTabs(options: { parentDiv: string, maxNumTabs?: number })` <br />
+`LiveTabs(options: { parentDiv: string, maxNumTabs?: number, allowDragAndDrop?: boolean})` <br />
 Where:
-- **parentDiv (string)**:  
-  The ID of the parent container where the tabs will be created (e.g., 'tabs-container').
+- **parentDiv** (string):  
+  The ID of the div where you want to create the tab container (e.g., `tabs-container`).
 
-- **maxNumTabs (number, optional)**:  
-  The maximum number of tabs that can be opened at once. Default: No limit.
+- **maxNumTabs** (number, optional):  
+  The maximum number of tabs that can be opened at once. If not specified, there is no limit.
 
----
+- **allowDragAndDrop** (boolean, optional, default = `false`):  
+  Enables drag-and-drop functionality for reordering tabs when set to true. Defaults to false.
 
 ### Methods
 
-- `addTab(params: { tabTitle: string, showCloseButton?: boolean, allowDragAndDrop?: boolean, addContent?: (idContent: string) => void })`  
-  Adds a new tab with the specified title. Optionally, enables a close button and drag-and-drop functionality, both of which are enabled by default.  
-  You can also provide an addContent callback to populate the content of the tab.
+- `addTab(params: { tabTitle: string, showCloseButton?: boolean, addContent?: (idContent: string) => void })`  
+  Adds a new tab with the specified title. Optionally, enables a close button who is enabled by default. You can also provide an addContent callback to populate the content of the tab.
 
 - `removeTab(idTab: string)`  
   Removes the tab with the specified ID and its associated content.
@@ -155,13 +154,14 @@ Where:
         maxNumTabs: 3 // set the maximum number of tab allowed (optional)
     });
     ```
-3. **Reorder Tabs via Drag and Drop** <br/>
+3. **Allow Drag and Drop** <br/>
     Enable the drag-and-drop feature to reorder tabs.
     
     ```typescript
-    liveTabs.addTab({
-        tabTitle: 'Drag Me',
-        allowDragAndDrop: true (optional because it is true by default)
+    const liveTabs = new LiveTabs({
+        parentDiv: 'tabs-container',
+        maxNumTabs: 3, // set the maximum number of tab allowed (optional)
+        allowDragAndDrop: true // default: false
     });
     ```
 5. **Switch to Next/Previous Tab** <br/>
