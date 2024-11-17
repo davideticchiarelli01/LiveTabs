@@ -1,12 +1,12 @@
 /**
- * LiveTabs version 0.1
+ * LiveTabs version 1.0.1
  *
  * @class LiveTabs
  * @description LiveTabs is a TypeScript library for dynamically managing interactive tabs within a web application.
  *              It enables the creation, movement, and closure of tabs, with options to limit the maximum number of tabs
  *              and customize the appearance and behavior of each tab.
  *
- * @version 0.1
+ * @version 1.0.1
  * @date Created: 02 Nov 2024
  * @author Davide Ticchiarelli
  * @contact davideticchiarelli01@gmail.com
@@ -43,7 +43,6 @@ class LiveTabs {
     // =======================================================
     // NavBar, tab and content creation
     // =======================================================
-
 
     /**
      * Creates the navbar where tabs will be displayed.
@@ -137,20 +136,21 @@ class LiveTabs {
         // Conditionally create and append the close button based on `showCloseButton`
         let closeButton: HTMLElement | null = null; // Declare a variable to hold the close button reference
 
-        if (showCloseButton) { // If `showCloseButton` is true, create the close button
-            closeButton = document.createElement('button'); // Create the close button element
-            closeButton.innerHTML = `
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            `;
-            closeButton.classList.add('lt-tab-close-btn'); // Add a class to the close button for styling
-            closeButton.onclick = (event) => {
-                event.stopPropagation(); // Prevent triggering tab switch on close
-                this.removeTab(tabId); // Call `removeTab` to remove the tab
+        if (showCloseButton) {
+            closeButton = document.createElement('button');
+
+            // Use the img tag to include the SVG
+            const icon = document.createElement('img');
+            icon.src = '../assets/images/black-cross.svg'; // Path to the SVG file
+            icon.alt = 'Close'; // Optional: Add an alt text for accessibility
+
+            closeButton.appendChild(icon); // Add the icon image to the button
+            closeButton.classList.add('lt-tab-close-btn');
+            icon.onclick = (event) => {
+                event.stopPropagation();
+                this.removeTab(tabId);
             };
-            tab.appendChild(closeButton); // Append the close button to the tab element
+            tab.appendChild(closeButton);
         }
 
         if (this.allowDragAndDrop) { // Check if drag-and-drop functionality is enabled

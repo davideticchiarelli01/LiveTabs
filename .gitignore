@@ -1,0 +1,24 @@
+# Node modules
+node_modules/
+
+# Log files
+*.log
+
+# MacOS system files
+.DS_Store
+
+# IDE/Editor files (per esempio per VSCode)
+.vscode/
+.idea/
+
+# npm package lock file (se non necessario nel controllo versione)
+package-lock.json
+
+# Build files
+build/
+
+# Temporary files
+*.tmp
+
+# Environment variables file (se usato)
+.env

@@ -2,14 +2,13 @@
 
 **LiveTabs** is a lightweight, interactive tab management library for web applications. It allows for dynamic tab creation, movement, and removal with easy-to-use methods, plus advanced features such as tab limiting, drag-and-drop functionality, and customizable appearances.
 
-This library is available in both TypeScript and JavaScript versions.
+
 
 ## Table of Contents
 
 1. [Features](#features)
 2. [Installation](#installation)
 3. [Quick Usage Example](#quick-usage-example)
-   - [TypeScript Example](#typescript-example)
    - [JavaScript Example](#javascript-example)
 4. [API Reference](#api-reference)
    - [Constructor](#constructor)
@@ -30,40 +29,19 @@ This library is available in both TypeScript and JavaScript versions.
 - **Simple API:** Includes methods to switch, remove, and get the active tab.
 
 ## Installation
-- Download: Download the JavaScript or TypeScript file and include it in your project.
+- Download: Download the JavaScript and include it in your project.
 - CDN: Use the following CDN link to include the library directly in your HTML file <br/>
    
    **JavaScript**: 
    ```html
-   <script src="https://cdn.jsdelivr.net/gh/davideticchiarelli01/LiveTabs@master/LiveTabs.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/livetabs@1.0.1/dist/LiveTabs.min.js"></script>
    ```
-   **TypeScript**:
-   ```html
-   <script src="https://cdn.jsdelivr.net/gh/davideticchiarelli01/LiveTabs@master/LiveTabs.ts"></script>
-   ```
-- NPM: Install LiveTabs via NPM (coming soon).
+
+- NPM: Install LiveTabs via NPM
+  `npm install livetabs`
 
 ## Quick Usage Example
-### TypeScript Example
-
-```typescript
-import { LiveTabs } from 'livetabs';
-
-const liveTabs = new LiveTabs({
-    parentDiv: 'tabs-container',
-    maxNumTabs: 5 // Optional: Maximum number of open tabs
-    allowDragAndDrop: true, // Optional: it is set to false by default
-});
-
-liveTabs.addTab({
-    tabTitle: 'Tab 1',
-    showCloseButton: true,
-    addContent: (contentId: string) => {
-        const contentElement = document.getElementById(contentId);
-        contentElement.innerHTML = 'Content for Tab 1';
-    }
-});
-```
+To get started with LiveTabs, follow the example below to create a simple tabbed interface in your web application.
 ### Javascript example
 ```javascript
 <div id="tabs-container"></div> <!-- Target div where the navbar is injected -->
@@ -136,7 +114,7 @@ Where:
 1. **Dynamically Create Tabs with Content** <br/>
      You can dynamically create tabs and inject custom content into each one.
       
-     ```typescript
+     ```javascript
       liveTabs.addTab({
           tabTitle: 'New Tab',
           addContent: (contentId) => {
@@ -148,7 +126,7 @@ Where:
 2. **Limiting the Number of Tabs** <br/>
     You can limit the number of tabs open at any time.
     
-    ```typescript
+    ```javascript
     const liveTabs = new LiveTabs({
         parentDiv: 'tabs-container',
         maxNumTabs: 3 // set the maximum number of tab allowed (optional)
@@ -157,7 +135,7 @@ Where:
 3. **Allow Drag and Drop** <br/>
     Enable the drag-and-drop feature to reorder tabs.
     
-    ```typescript
+    ```javascript
     const liveTabs = new LiveTabs({
         parentDiv: 'tabs-container',
         maxNumTabs: 3, // set the maximum number of tab allowed (optional)
@@ -167,7 +145,7 @@ Where:
 5. **Switch to Next/Previous Tab** <br/>
     Switch between tabs programmatically.
   
-    ```typescript
+    ```javascript
     liveTabs.nextTab(); // Switch to the next tab
     liveTabs.previousTab(); // Switch to the previous tab
     ```

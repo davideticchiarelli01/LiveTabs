@@ -1,0 +1,39 @@
+{
+  "name": "livetabs",
+  "version": "1.0.1",
+  "description": "A lightweight, interactive tab management library for web applications, supporting dynamic tab creation, drag-and-drop functionality, and customizable tab appearance.",
+  "main": "dist/LiveTabs.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/LiveTabs.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davideticchiarelli01/LiveTabs.git"
+  },
+  "author": "davideticchiarelli01",
+  "license": "MIT",
+  "private": false,
+  "keywords": [
+    "tab",
+    "tabs",
+    "tab management",
+    "drag and drop",
+    "dynamic tabs",
+    "web applications",
+    "frontend",
+    "UI",
+    "JavaScript",
+    "TypeScript",
+    "AJAX"
+  ],
+  "devDependencies": {
+    "typescript": "^4.0.0"
+  },
+  "files": [
+    "dist/",
+    "assets/images/",
+    "src/"
+  ]
+}
