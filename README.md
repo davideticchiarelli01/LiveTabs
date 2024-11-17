@@ -34,7 +34,7 @@
    
    **JavaScript**: 
    ```html
-   <script src="https://cdn.jsdelivr.net/npm/livetabs@1.0.1/dist/LiveTabs.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/livetabs@1.0.2/dist/LiveTabs.min.js"></script>
    ```
 
 - NPM: Install LiveTabs via NPM

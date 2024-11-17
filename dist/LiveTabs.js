@@ -1,13 +1,13 @@
 "use strict";
 /**
- * LiveTabs version 1.0.1
+ * LiveTabs version 1.0.2
  *
  * @class LiveTabs
  * @description LiveTabs is a TypeScript library for dynamically managing interactive tabs within a web application.
  *              It enables the creation, movement, and closure of tabs, with options to limit the maximum number of tabs
  *              and customize the appearance and behavior of each tab.
  *
- * @version 1.0.1
+ * @version 1.0.2
  * @date Created: 02 Nov 2024
  * @author Davide Ticchiarelli
  * @contact davideticchiarelli01@gmail.com
@@ -110,17 +110,25 @@ class LiveTabs {
         let closeButton = null; // Declare a variable to hold the close button reference
         if (showCloseButton) {
             closeButton = document.createElement('button');
-            // Use the img tag to include the SVG
-            const icon = document.createElement('img');
-            icon.src = '../assets/images/black-cross.svg'; // Path to the SVG file
-            icon.alt = 'Close'; // Optional: Add an alt text for accessibility
-            closeButton.appendChild(icon); // Add the icon image to the button
-            closeButton.classList.add('lt-tab-close-btn');
-            icon.onclick = (event) => {
-                event.stopPropagation();
-                this.removeTab(tabId);
+            // Directly insert the SVG markup into the close button
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("width", "20px");
+            svg.setAttribute("height", "20px");
+            svg.setAttribute("viewBox", "0 0 16 16");
+            svg.setAttribute("class", "bi bi-x");
+            svg.setAttribute("fill", "currentColor");
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("fill-rule", "evenodd");
+            path.setAttribute("d", "M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z");
+            svg.appendChild(path); // Add the path to the SVG element
+            // Move the onclick event to the SVG
+            svg.onclick = (event) => {
+                event.stopPropagation(); // Prevent the click from propagating to the tab
+                this.removeTab(tabId); // Call removeTab on click
             };
-            tab.appendChild(closeButton);
+            closeButton.appendChild(svg); // Add the SVG to the close button
+            closeButton.classList.add('lt-tab-close-btn');
+            tab.appendChild(closeButton); // Add the close button to the tab
         }
         if (this.allowDragAndDrop) { // Check if drag-and-drop functionality is enabled
             this.dragAndDropTab(tab);
