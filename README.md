@@ -1,4 +1,6 @@
-# LiveTabs
+# LiveTabs ![Version](https://img.shields.io/npm/v/livetabs) ![Downloads](https://img.shields.io/npm/dw/livetabs) ![License](https://img.shields.io/npm/l/livetabs) ![Bundle Size](https://img.shields.io/bundlephobia/min/livetabs)
+
+
 
 **LiveTabs** is a lightweight, interactive tab management library for web applications. It allows for dynamic tab creation, movement, and removal with easy-to-use methods, plus advanced features such as tab limiting, drag-and-drop functionality, and customizable appearances.
 
