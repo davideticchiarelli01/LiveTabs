@@ -1,4 +1,6 @@
-# LiveTabs [![Version](https://img.shields.io/npm/v/livetabs)](https://www.npmjs.com/package/livetabs) [![Downloads](https://img.shields.io/npm/dw/livetabs)](https://www.npmjs.com/package/livetabs) [![License](https://img.shields.io/npm/l/livetabs)](https://www.npmjs.com/package/livetabs) [![Bundle Size](https://img.shields.io/bundlephobia/min/livetabs)](https://www.npmjs.com/package/livetabs)
+# LiveTabs [![Version](https://img.shields.io/npm/v/livetabs?color=brightgreen)](https://www.npmjs.com/package/livetabs) [![Bundle Size](https://img.shields.io/bundlephobia/min/livetabs?color=blue)](https://www.npmjs.com/package/livetabs) [![Downloads](https://img.shields.io/npm/dt/livetabs?color=brightgreen)](https://www.npmjs.com/package/livetabs) [![License](https://img.shields.io/npm/l/livetabs?color=blue)](https://www.npmjs.com/package/livetabs)
+
+
 
 
 
