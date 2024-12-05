@@ -55,8 +55,8 @@ To get started with LiveTabs, follow the example below to create a simple tabbed
 <script>
     const liveTabs = new LiveTabs({
         parentDiv: 'tabs-container',
-        maxNumTabs: 5 // Optional: Maximum number of open tabs
-        allowDragAndDrop: true, // Optional: it is set to false by default
+        maxNumTabs: 5, // Optional: Maximum number of open tabs
+        allowDragAndDrop: true // Optional: it is set to false by default
     });
 
     liveTabs.addTab({
