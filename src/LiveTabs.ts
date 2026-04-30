@@ -1,12 +1,12 @@
 /**
- * LiveTabs version 1.0.2
+ * LiveTabs version 1.0.3
  *
  * @class LiveTabs
  * @description LiveTabs is a TypeScript library for dynamically managing interactive tabs within a web application.
  *              It enables the creation, movement, and closure of tabs, with options to limit the maximum number of tabs
  *              and customize the appearance and behavior of each tab.
  *
- * @version 1.0.2
+ * @version 1.0.3
  * @date Created: 02 Nov 2024
  * @author Davide Ticchiarelli
  * @contact davideticchiarelli01@gmail.com
@@ -17,7 +17,7 @@
  * @param allowDragAndDrop (boolean, optional) - Flag to enable drag-and-drop functionality. Default: false.
  *
  * @dependencies None.
- * @license Proprietary (©2024 Davide Ticchiarelli)
+ * @license MIT
  */
 
 
@@ -153,13 +153,12 @@ class LiveTabs {
 
             svg.appendChild(path); // Add the path to the SVG element
 
-            // Move the onclick event to the SVG
-            svg.onclick = (event) => {
+            closeButton.appendChild(svg); // Add the SVG to the close button
+
+            closeButton.onclick = (event) => {
                 event.stopPropagation(); // Prevent the click from propagating to the tab
                 this.removeTab(tabId);   // Call removeTab on click
             };
-
-            closeButton.appendChild(svg); // Add the SVG to the close button
             closeButton.classList.add('lt-tab-close-btn');
             tab.appendChild(closeButton); // Add the close button to the tab
         }
@@ -236,8 +235,9 @@ class LiveTabs {
         tab.ondragenter = (e: DragEvent) => {
             e.preventDefault();
             let dropTarget = (e.target as HTMLElement).closest('.lt-tab') as HTMLElement;
-            console.log(dropTarget);
-            dropTarget.classList.add('over');
+            if (dropTarget) {
+                dropTarget.classList.add('over');
+            }
         };
 
         tab.ondragleave = (e: DragEvent) => {
@@ -337,7 +337,7 @@ class LiveTabs {
             return; // If so, do nothing
         }
 
-        if (tabsArray.length === 0) {
+        if (tabsArray.length <= 1) {
             this.openedId = ''; // Clear openedId if no tabs are left
             return;
         }
@@ -359,7 +359,8 @@ class LiveTabs {
      * to remove each tab and its associated content from the DOM.
      */
     public removeAllTabs(): void {
-        this.tabContentMap.forEach((contentId, tabId) => {
+        const tabIds = Array.from(this.tabContentMap.keys());
+        tabIds.forEach(tabId => {
             this.removeTab(tabId); // Remove each tab and its associated content
         });
     }
@@ -485,5 +486,10 @@ class LiveTabs {
         this.maxNumTabs = newMax;
     }
 
+}
 
+// Support for Node.js require() / CommonJS
+declare var module: any;
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = LiveTabs;
 }

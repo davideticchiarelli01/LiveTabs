@@ -39,7 +39,7 @@
    
    **JavaScript**: 
    ```html
-   <script src="https://cdn.jsdelivr.net/npm/livetabs@1.0.2/dist/LiveTabs.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/livetabs@1.0.3/dist/LiveTabs.min.js"></script>
    ```
 
 - NPM: Install LiveTabs via NPM
@@ -51,7 +51,7 @@ To get started with LiveTabs, follow the example below to create a simple tabbed
 ```javascript
 <div id="tabs-container"></div> <!-- Target div where the navbar is injected -->
 
-<script src="https://cdn.jsdelivr.net/npm/livetabs@1.0.2/dist/LiveTabs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/livetabs@1.0.3/dist/LiveTabs.min.js"></script>
 <script>
     const liveTabs = new LiveTabs({
         parentDiv: 'tabs-container',

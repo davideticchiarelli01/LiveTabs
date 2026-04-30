@@ -1,12 +1,12 @@
 {
   "name": "livetabs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A lightweight, interactive tab management library for web applications",
   "main": "dist/LiveTabs.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && terser dist/LiveTabs.js -o dist/LiveTabs.min.js -c -m",
     "start": "node dist/LiveTabs.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "AJAX"
   ],
   "devDependencies": {
+    "terser": "^5.46.2",
     "typescript": "^4.0.0"
   },
   "files": [

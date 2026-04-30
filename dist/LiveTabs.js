@@ -1,13 +1,13 @@
 "use strict";
 /**
- * LiveTabs version 1.0.2
+ * LiveTabs version 1.0.3
  *
  * @class LiveTabs
  * @description LiveTabs is a TypeScript library for dynamically managing interactive tabs within a web application.
  *              It enables the creation, movement, and closure of tabs, with options to limit the maximum number of tabs
  *              and customize the appearance and behavior of each tab.
  *
- * @version 1.0.2
+ * @version 1.0.3
  * @date Created: 02 Nov 2024
  * @author Davide Ticchiarelli
  * @contact davideticchiarelli01@gmail.com
@@ -18,7 +18,7 @@
  * @param allowDragAndDrop (boolean, optional) - Flag to enable drag-and-drop functionality. Default: false.
  *
  * @dependencies None.
- * @license Proprietary (©2024 Davide Ticchiarelli)
+ * @license MIT
  */
 class LiveTabs {
     // Constructor to initialize the LiveTabsTS class
@@ -121,12 +121,11 @@ class LiveTabs {
             path.setAttribute("fill-rule", "evenodd");
             path.setAttribute("d", "M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z");
             svg.appendChild(path); // Add the path to the SVG element
-            // Move the onclick event to the SVG
-            svg.onclick = (event) => {
+            closeButton.appendChild(svg); // Add the SVG to the close button
+            closeButton.onclick = (event) => {
                 event.stopPropagation(); // Prevent the click from propagating to the tab
                 this.removeTab(tabId); // Call removeTab on click
             };
-            closeButton.appendChild(svg); // Add the SVG to the close button
             closeButton.classList.add('lt-tab-close-btn');
             tab.appendChild(closeButton); // Add the close button to the tab
         }
@@ -190,8 +189,9 @@ class LiveTabs {
         tab.ondragenter = (e) => {
             e.preventDefault();
             let dropTarget = e.target.closest('.lt-tab');
-            console.log(dropTarget);
-            dropTarget.classList.add('over');
+            if (dropTarget) {
+                dropTarget.classList.add('over');
+            }
         };
         tab.ondragleave = (e) => {
             let dropTarget = e.target.closest('.lt-tab');
@@ -269,7 +269,7 @@ class LiveTabs {
         if (this.tabContentMap.has(this.openedId)) {
             return; // If so, do nothing
         }
-        if (tabsArray.length === 0) {
+        if (tabsArray.length <= 1) {
             this.openedId = ''; // Clear openedId if no tabs are left
             return;
         }
@@ -288,7 +288,8 @@ class LiveTabs {
      * to remove each tab and its associated content from the DOM.
      */
     removeAllTabs() {
-        this.tabContentMap.forEach((contentId, tabId) => {
+        const tabIds = Array.from(this.tabContentMap.keys());
+        tabIds.forEach(tabId => {
             this.removeTab(tabId); // Remove each tab and its associated content
         });
     }
@@ -399,4 +400,7 @@ class LiveTabs {
     setMaxTabs(newMax) {
         this.maxNumTabs = newMax;
     }
+}
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = LiveTabs;
 }
