@@ -20,24 +20,61 @@
  * @license MIT
  */
 
+type LiveTabsOptions = {
+    parentDiv: string;
+    maxNumTabs?: number;
+    allowDragAndDrop?: boolean;
+};
+
+type AddTabParams = {
+    tabTitle: string;
+    showCloseButton?: boolean;
+    addContent?: (idContent: string) => void;
+};
 
 class LiveTabs {
+    private static instanceCounter = 0;
+
     parentDiv: string; // ID of the parent div where the tabs will be created
-    navbarDiv: HTMLElement | undefined; // The div element that contains the tabs
+    navbarDiv: HTMLElement; // The div element that contains the tabs
     maxNumTabs?: number; // Maximum number of tabs allowed to open
     openedId: string; // ID of the currently opened tab
     allowDragAndDrop: boolean; // Flag to enable/disable drag-and-drop functionality
     tabContentMap: Map<string, string>; // Map to hold tab IDs and their associated content IDs
 
-    // Constructor to initialize the LiveTabsTS class
-    constructor(options: { parentDiv: string; maxNumTabs?: number; allowDragAndDrop?: boolean }) {
-        this.parentDiv = options.parentDiv;      // Set the parentDiv from the options
-        this.openedId = '';                       // Initialize openedId as an empty string
-        this.allowDragAndDrop = options.allowDragAndDrop ?? false; // Default to false if not provided
-        this.maxNumTabs = options.maxNumTabs;    // Set the maximum number of tabs from the options
-        this.tabContentMap = new Map();          // Initialize the map for tab-content relationship
+    private readonly parentElement: HTMLElement;
+    private readonly instanceId: string;
+    private nextTabIndex: number;
+    private tabIdTitleMap: Map<string, string>;
+    private tabTitleIdMap: Map<string, string>;
 
-        this.createNavbar();                      // Call method to create the navbar for tabs
+    // Constructor to initialize the LiveTabs class
+    constructor(options: LiveTabsOptions) {
+        if (typeof document === 'undefined') {
+            throw new Error('LiveTabs requires a DOM document.');
+        }
+
+        if (!options || typeof options.parentDiv !== 'string' || options.parentDiv.trim() === '') {
+            throw new TypeError('LiveTabs requires a non-empty parentDiv option.');
+        }
+
+        const parentElement = document.getElementById(options.parentDiv);
+        if (!parentElement) {
+            throw new Error(`Parent element with id "${options.parentDiv}" not found.`);
+        }
+
+        this.parentDiv = options.parentDiv;
+        this.parentElement = parentElement;
+        this.instanceId = `lt-${++LiveTabs.instanceCounter}`;
+        this.nextTabIndex = 0;
+        this.openedId = '';
+        this.allowDragAndDrop = options.allowDragAndDrop ?? false;
+        this.maxNumTabs = this.validateMaxTabs(options.maxNumTabs);
+        this.tabContentMap = new Map();
+        this.tabIdTitleMap = new Map();
+        this.tabTitleIdMap = new Map();
+
+        this.navbarDiv = this.createNavbar();
     }
 
     // =======================================================
@@ -47,22 +84,17 @@ class LiveTabs {
     /**
      * Creates the navbar where tabs will be displayed.
      *
-     * This method retrieves the parent element by its ID and creates a new `div` element for the navbar.
-     * If the parent element does not exist, it logs an error and exits the method.
-     * The new `div` element is assigned an ID and a CSS class, and is prepended to the parent element.
+     * This method creates a new `div` element for the navbar.
+     * The new `div` element is assigned a unique ID and a CSS class, and is prepended to the parent element.
      */
-    private createNavbar(): void {
-        const parentElement = document.getElementById(this.parentDiv); // Get the parent element by ID
-
-        if (!parentElement) { // Check if the parent element exists
-            console.error(`Parent element with id "${this.parentDiv}" not found.`); // Log error if not found
-            return; // Exit the method if the parent element does not exist
-        }
-
+    private createNavbar(): HTMLElement {
         this.navbarDiv = document.createElement('div'); // Create a new div for the tabs
-        this.navbarDiv.id = 'liveTabs-container'; // Set the ID of the navbar div
+        this.navbarDiv.id = `${this.instanceId}-container`; // Set the ID of the navbar div
         this.navbarDiv.classList.add('lt-container'); // Set the class of the navbar div
-        parentElement.prepend(this.navbarDiv); // Prepend the navbar div to the parent element
+        this.navbarDiv.setAttribute('role', 'tablist');
+        this.parentElement.prepend(this.navbarDiv); // Prepend the navbar div to the parent element
+
+        return this.navbarDiv;
     }
 
     /**
@@ -73,42 +105,37 @@ class LiveTabs {
      * @param {boolean} [params.showCloseButton=true] - Whether to show a close button on the tab.
      * @param {Function} [params.addContent] - A callback function to add content to the tab.
      */
-    public addTab(params: {
-        tabTitle: string;
-        showCloseButton?: boolean;
-        addContent?: (idContent: string) => void
-    }): void {
+    public addTab(params: AddTabParams): void {
         // Destructure parameters to get tabTitle and optional properties
         const {tabTitle, showCloseButton = true, addContent} = params;
-
-        // Check if the maximum number of tabs has been reached
-        if (this.maxNumTabs && this.tabContentMap.size >= this.maxNumTabs) {
-            // Alert the user if the maximum limit is reached
-            alert('Maximum number of tabs reached. Please close some tabs to continue.');
-            return; // Exit the method to prevent adding more tabs
-        }
-
-        // Sanitize the tab title to create a valid ID (lowercase and alphanumeric only)
-        const sanitizedId = tabTitle.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-        // Construct a unique tab ID using the sanitized title
-        const tabId = `lt-tab-${sanitizedId}`;
+        const normalizedTitle = this.validateTabTitle(tabTitle);
 
         // Check if the tab already exists
-        if (this.tabContentMap.has(tabId)) {
+        const existingTabId = this.tabTitleIdMap.get(normalizedTitle);
+        if (existingTabId && this.tabContentMap.has(existingTabId)) {
             // If it exists, switch to the existing tab
-            this.switchTab(tabId);
+            this.switchTab(existingTabId);
             return; // Exit as no new tab needs to be created
         }
 
+        // Check if the maximum number of tabs has been reached
+        if (this.maxNumTabs !== undefined && this.tabContentMap.size >= this.maxNumTabs) {
+            console.warn('Maximum number of tabs reached. Please close some tabs to continue.');
+            return; // Exit the method to prevent adding more tabs
+        }
+
+        const tabId = this.createTabId(normalizedTitle);
+        const idContent = `${tabId}-container`;
+
         // Create a new tab element and append it to the navigation bar
-        const tab = this.createTab(tabTitle, tabId, showCloseButton);
-        this.navbarDiv?.appendChild(tab);
+        const tab = this.createTab(normalizedTitle, tabId, idContent, showCloseButton);
+        this.navbarDiv.appendChild(tab);
 
-        this.createTabContent(tabId); // Create a corresponding content area for the new tab
+        this.createTabContent(tabId, idContent); // Create a corresponding content area for the new tab
 
-        const idContent = `${sanitizedId}-container`; // Generate a unique content div ID for storing content related to this tab
         this.tabContentMap.set(tabId, idContent); // Map the tab ID to its corresponding content div ID
-
+        this.tabIdTitleMap.set(tabId, normalizedTitle);
+        this.tabTitleIdMap.set(normalizedTitle, tabId);
 
         // If a callback function is provided, execute it to inject content into the new content div
         if (addContent) {
@@ -127,17 +154,27 @@ class LiveTabs {
      * @param {boolean} showCloseButton - Whether to show a close button on the tab.
      * @returns {HTMLElement} The created tab element.
      */
-    private createTab(tabTitle: string, tabId: string, showCloseButton: boolean): HTMLElement {
-        const tab = document.createElement("button"); // Create a new button element to represent the tab
-        tab.textContent = tabTitle; // Set the text of the tab to the provided title
+    private createTab(tabTitle: string, tabId: string, contentId: string, showCloseButton: boolean): HTMLElement {
+        const tab = document.createElement('div'); // Create a new element to represent the tab
         tab.id = tabId; // Set the unique ID of the tab to the provided ID
-        tab.className = 'lt-tab active'; // Assign a class to the tab for styling, initially setting it as active
+        tab.className = 'lt-tab'; // Assign a class to the tab for styling
+        tab.setAttribute('role', 'tab');
+        tab.setAttribute('tabindex', '-1');
+        tab.setAttribute('aria-selected', 'false');
+        tab.setAttribute('aria-controls', contentId);
+
+        const label = document.createElement('span');
+        label.classList.add('lt-tab-label');
+        label.textContent = tabTitle;
+        tab.appendChild(label);
 
         // Conditionally create and append the close button based on `showCloseButton`
-        let closeButton: HTMLElement | null = null; // Declare a variable to hold the close button reference
+        let closeButton: HTMLButtonElement | null = null; // Declare a variable to hold the close button reference
 
         if (showCloseButton) {
             closeButton = document.createElement('button');
+            closeButton.type = 'button';
+            closeButton.setAttribute('aria-label', `Close ${tabTitle}`);
 
             // Directly insert the SVG markup into the close button
             const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -169,8 +206,16 @@ class LiveTabs {
 
         // Set the `onclick` event for the tab itself
         tab.onclick = (event) => {
-            if (!closeButton || event.target !== closeButton) { // Check if close button exists and if the click target is not the close button
+            const target = event.target instanceof Element ? event.target : null;
+            if (!target?.closest('.lt-tab-close-btn')) {
                 this.switchTab(tab.id); // If true, call `switchTab` with the tab's ID to switch to the tab
+            }
+        };
+
+        tab.onkeydown = (event: KeyboardEvent) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                this.switchTab(tab.id);
             }
         };
 
@@ -187,15 +232,17 @@ class LiveTabs {
      *
      * @param {string} tabId - The ID of the tab for which the content area is being created.
      */
-    private createTabContent(tabId: string): void {
-        const parentElement = document.getElementById(this.parentDiv); // Get the parent element by ID
+    private createTabContent(tabId: string, contentId: string): void {
         const tabContentDiv = document.createElement('div'); // Create a new div for the tab content
 
-        tabContentDiv.id = tabId.replace('lt-tab-', '') + '-container'; // Assign content ID
-        tabContentDiv.style.display = 'block'; // Set the style to display block
+        tabContentDiv.id = contentId; // Assign content ID
+        tabContentDiv.style.display = 'none'; // Hide the content until the tab is active
         tabContentDiv.classList.add('lt-tab-content'); // Add a CSS class for styling
+        tabContentDiv.setAttribute('role', 'tabpanel');
+        tabContentDiv.setAttribute('aria-labelledby', tabId);
+        tabContentDiv.setAttribute('aria-hidden', 'true');
 
-        parentElement?.appendChild(tabContentDiv); // Append the content div to the parent element
+        this.parentElement.appendChild(tabContentDiv); // Append the content div to the parent element
     }
 
 
@@ -217,11 +264,9 @@ class LiveTabs {
         let dragSrcEl: HTMLElement | null = null;
 
         tab.ondragstart = (e: DragEvent) => {
-            dragSrcEl = e.target as HTMLElement;
-            if (dragSrcEl) {
-                dragSrcEl.style.opacity = '0.4';
-                e.dataTransfer?.setData("text/plain", dragSrcEl.id);
-            }
+            dragSrcEl = tab;
+            dragSrcEl.style.opacity = '0.4';
+            e.dataTransfer?.setData("text/plain", dragSrcEl.id);
         };
 
         tab.ondragend = () => {
@@ -234,33 +279,35 @@ class LiveTabs {
 
         tab.ondragenter = (e: DragEvent) => {
             e.preventDefault();
-            let dropTarget = (e.target as HTMLElement).closest('.lt-tab') as HTMLElement;
+            const target = e.target instanceof Element ? e.target : null;
+            let dropTarget = target?.closest('.lt-tab') as HTMLElement | null;
             if (dropTarget) {
                 dropTarget.classList.add('over');
             }
         };
 
         tab.ondragleave = (e: DragEvent) => {
-            let dropTarget = (e.target as HTMLElement).closest('.lt-tab') as HTMLElement;
+            const target = e.target instanceof Element ? e.target : null;
+            let dropTarget = target?.closest('.lt-tab') as HTMLElement | null;
 
-            if (dropTarget !== e.target) return;
+            if (!dropTarget || dropTarget !== e.target) return;
             dropTarget.classList.remove('over');
         };
 
         tab.ondrop = (e: DragEvent) => {
             e.preventDefault();
 
-            let dropTarget = (e.target as HTMLElement).closest('.lt-tab') as HTMLElement;
+            const target = e.target instanceof Element ? e.target : null;
+            let dropTarget = target?.closest('.lt-tab') as HTMLElement | null;
 
-            if (!dropTarget) {
+            if (!dropTarget || dropTarget.parentNode !== this.navbarDiv) {
                 dropTarget = tab;
             }
 
             const draggedId = e.dataTransfer?.getData("text/plain") ?? '';
             const draggedElement = document.getElementById(draggedId);
 
-            // Check to exclude the specific button from being the drop target
-            if (draggedElement && dropTarget) {
+            if (draggedElement && draggedElement !== dropTarget && draggedElement.parentNode === this.navbarDiv) {
                 const dropTargetRect = dropTarget.getBoundingClientRect(); // Get the bounding rectangle of the drop target
                 const center = (dropTargetRect.left + dropTargetRect.right) / 2; // Get the center of the drop target
                 const insertBefore = e.clientX <= center; // Check if the cursor is left or right of the center
@@ -277,7 +324,7 @@ class LiveTabs {
                 console.warn("No valid dragged element or drop target found.");
             }
 
-            dropTarget.classList.remove('over');
+            dropTarget?.classList.remove('over');
         };
     }
 
@@ -288,7 +335,7 @@ class LiveTabs {
         const newOrder: Map<string, string> = new Map();
 
         // Get all tabs currently in the DOM
-        const tabs = Array.from(this.navbarDiv?.children || []).filter(tab => tab instanceof HTMLElement) as HTMLElement[];
+        const tabs = Array.from(this.navbarDiv.children).filter(tab => tab instanceof HTMLElement) as HTMLElement[];
 
         tabs.forEach(tab => {
             const tabId = tab.id;
@@ -331,6 +378,11 @@ class LiveTabs {
         const tabsArray = Array.from(this.tabContentMap.keys());
 
         this.tabContentMap.delete(idTab); // Remove the closed tab from the map
+        const tabTitle = this.tabIdTitleMap.get(idTab);
+        if (tabTitle) {
+            this.tabTitleIdMap.delete(tabTitle);
+            this.tabIdTitleMap.delete(idTab);
+        }
 
         // Check if the currently opened tab is still available
         if (this.tabContentMap.has(this.openedId)) {
@@ -378,25 +430,21 @@ class LiveTabs {
      *
      * @param {string} id - The ID of the tab to switch to.
      */
-    private switchTab(id: string): void {
+    public switchTab(id: string): void {
+        if (!this.tabContentMap.has(id)) {
+            console.warn('Tab not found in the tab-content map for ID:', id);
+            return;
+        }
+
         if (this.openedId === id) {
             return;
         } // If the tab is already open, do nothing
 
         if (this.openedId) { // Check if there is a currently opened tab
-            const previousContentId = this.tabContentMap.get(this.openedId); // Get the content ID of the previously opened tab
-            const previousContent = document.getElementById(previousContentId!); // Get the content element by ID
-            if (previousContent) previousContent.style.display = 'none'; // Hide the previously opened content
-            const previousTab = document.getElementById(this.openedId); // Get the tab element by ID
-            previousTab?.classList.remove('active'); // Remove the 'active' class from the previously opened tab
+            this.setTabActive(this.openedId, false);
         }
 
-        const activeContentId = this.tabContentMap.get(id); // Get the content ID of the newly opened tab
-        const activeContent = document.getElementById(activeContentId!); // Get the content element by ID
-        if (activeContent) activeContent.style.display = 'block'; // Display the newly opened content
-
-        const activeTab = document.getElementById(id); // Get the tab element by ID
-        activeTab?.classList.add('active'); // Add the 'active' class to the newly opened tab
+        this.setTabActive(id, true);
         this.openedId = id; // Update the currently opened tab ID
     }
 
@@ -483,13 +531,67 @@ class LiveTabs {
      * @param {number} newMax - The new maximum number of tabs.
      */
     public setMaxTabs(newMax: number): void {
-        this.maxNumTabs = newMax;
+        this.maxNumTabs = this.validateMaxTabs(newMax);
+    }
+
+    private setTabActive(tabId: string, isActive: boolean): void {
+        const contentId = this.tabContentMap.get(tabId);
+        const content = contentId ? document.getElementById(contentId) : null;
+        if (content) {
+            content.style.display = isActive ? 'block' : 'none';
+            content.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+        }
+
+        const tab = document.getElementById(tabId);
+        if (tab) {
+            if (isActive) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+            tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            tab.setAttribute('tabindex', isActive ? '0' : '-1');
+        }
+    }
+
+    private createTabId(tabTitle: string): string {
+        const sanitizedTitle = tabTitle
+            .replace(/[^a-zA-Z0-9_-]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .toLowerCase() || 'tab';
+
+        this.nextTabIndex += 1;
+        return `${this.instanceId}-tab-${sanitizedTitle}-${this.nextTabIndex}`;
+    }
+
+    private validateTabTitle(tabTitle: string): string {
+        if (typeof tabTitle !== 'string' || tabTitle.trim() === '') {
+            throw new TypeError('addTab requires a non-empty tabTitle.');
+        }
+
+        return tabTitle;
+    }
+
+    private validateMaxTabs(maxTabs: number | undefined): number | undefined {
+        if (maxTabs === undefined) {
+            return undefined;
+        }
+
+        if (!Number.isInteger(maxTabs) || maxTabs < 0) {
+            throw new RangeError('maxNumTabs must be a non-negative integer.');
+        }
+
+        return maxTabs;
     }
 
 }
 
-// Support for Node.js require() / CommonJS
+// Support browser globals and Node.js require() / CommonJS
 declare var module: any;
+if (typeof window !== 'undefined') {
+    (window as typeof window & { LiveTabs: typeof LiveTabs }).LiveTabs = LiveTabs;
+}
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = LiveTabs;
 }

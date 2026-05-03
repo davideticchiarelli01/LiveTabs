@@ -11,11 +11,11 @@ node_modules/
 .vscode/
 .idea/
 
-# npm package lock file (se non necessario nel controllo versione)
-package-lock.json
-
 # Build files
 build/
+
+# Packed npm tarballs
+*.tgz
 
 # Temporary files
 *.tmp

@@ -3,10 +3,11 @@
   "version": "1.0.3",
   "description": "A lightweight, interactive tab management library for web applications",
   "main": "dist/LiveTabs.js",
+  "types": "dist/LiveTabs.d.ts",
   "scripts": {
     "build": "tsc && terser dist/LiveTabs.js -o dist/LiveTabs.min.js -c -m",
-    "start": "node dist/LiveTabs.js",
-    "test": "tsc --noEmit"
+    "test": "npm run build && node --test tests/liveTabs.dom.test.js",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -33,8 +34,6 @@
     "typescript": "^4.0.0"
   },
   "files": [
-    "dist/",
-    "assets/images/",
-    "src/"
+    "dist/"
   ]
 }
