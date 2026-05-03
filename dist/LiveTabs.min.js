@@ -1,13 +1,13 @@
 "use strict";
 /**
- * LiveTabs version 1.0.3
+ * LiveTabs version 1.0.4
  *
  * @class LiveTabs
  * @description LiveTabs is a TypeScript library for dynamically managing interactive tabs within a web application.
  *              It enables the creation, movement, and closure of tabs, with options to limit the maximum number of tabs
  *              and customize the appearance and behavior of each tab.
  *
- * @version 1.0.3
+ * @version 1.0.4
  * @date Created: 02 Nov 2024
  * @author Davide Ticchiarelli
  * @contact davideticchiarelli01@gmail.com

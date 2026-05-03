@@ -1,6 +1,6 @@
 {
   "name": "livetabs",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A lightweight, interactive tab management library for web applications",
   "main": "dist/LiveTabs.js",
   "types": "dist/LiveTabs.d.ts",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/davideticchiarelli01/LiveTabs.git"
+    "url": "git+https://github.com/davideticchiarelli01/LiveTabs.git"
   },
   "author": "davideticchiarelli01",
   "license": "MIT",

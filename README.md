@@ -16,7 +16,7 @@ npm install livetabs
 Browser CDN:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/livetabs@1.0.3/dist/LiveTabs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/livetabs@1.0.4/dist/LiveTabs.min.js"></script>
 ```
 
 The npm package publishes the built files in `dist/`:
@@ -32,7 +32,7 @@ Browser global:
 ```html
 <div id="tabs-container"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/livetabs@1.0.3/dist/LiveTabs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/livetabs@1.0.4/dist/LiveTabs.min.js"></script>
 <script>
   const tabs = new LiveTabs({
     parentDiv: 'tabs-container',
